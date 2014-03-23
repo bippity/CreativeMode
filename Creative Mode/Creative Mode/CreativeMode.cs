@@ -69,6 +69,8 @@ namespace CreativeMode
         private bool[] Panic = new bool[256];
         private bool[] WaterWalk = new bool[256];
         private bool[] NightOwl = new bool[256];
+        private bool[] Gills = new bool[256];
+        private bool[] ObsidianSkin = new bool[256];
 
         private DateTime LastCheck = DateTime.UtcNow;
 
@@ -79,6 +81,8 @@ namespace CreativeMode
             Panic[args.Who] = false;
             WaterWalk[args.Who] = false;
             NightOwl[args.Who] = false;
+            Gills[args.Who] = false;
+            ObsidianSkin[args.Who] = false;
         }
 
         public void OnUpdate(EventArgs args)
@@ -96,6 +100,10 @@ namespace CreativeMode
                         TShock.Players[i].SetBuff(15, 300, true);
                     if (NightOwl[i])
                         TShock.Players[i].SetBuff(12, 300, true);
+                    if (Gills[i])
+                        TShock.Players[i].SetBuff(4, 300, true);
+                    if (ObsidianSkin[i])
+                        TShock.Players[i].SetBuff(1, 300, true);
                 }
             }
         }
@@ -108,6 +116,8 @@ namespace CreativeMode
                 Panic[args.Player.Index] = !Panic[args.Player.Index];
                 WaterWalk[args.Player.Index] = !WaterWalk[args.Player.Index];
                 NightOwl[args.Player.Index] = !NightOwl[args.Player.Index];
+                Gills[args.Player.Index] = !Gills[args.Player.Index];
+                ObsidianSkin[args.Player.Index] = !ObsidianSkin[args.Player.Index];
 
 
                 if (args.Parameters.Count == 1)
