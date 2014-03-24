@@ -182,14 +182,34 @@ namespace CreativeMode
                                         case 1:
                                             #region PlaceTile
                                             {
-                                                tileType = reader.ReadUInt16();//createTile
+                                                bool wand = false;
+                                                int itemWand = -1;
+                                                tileType = reader.ReadUInt16();//creatTile //Special cases for 191, 192 (Wood), 194 (Bone if item.type is not 766), 225 (Hive) //Check .tileWand
                                                 style = reader.ReadByte();//placeStyle
                                                 foreach (Item item in TShock.Players[e.Msg.whoAmI].TPlayer.inventory)
                                                 {
                                                     if (item.type != 0 && item.createTile == tileType && item.placeStyle == style)
                                                     {
+                                                        if (item.tileWand != -1)
+                                                        {
+                                                            wand = true;
+                                                            itemWand = item.tileWand;
+                                                            break;
+                                                        }
                                                         count += item.stack;
                                                         giveItem = item;
+                                                    }
+                                                }
+                                                if (wand)
+                                                {
+                                                    count = 0;
+                                                    foreach (Item item in TShock.Players[e.Msg.whoAmI].TPlayer.inventory)
+                                                    {
+                                                        if (item.type == itemWand)
+                                                        {
+                                                            count += item.stack;
+                                                            giveItem = item;
+                                                        }
                                                     }
                                                 }
                                             }
@@ -250,7 +270,8 @@ namespace CreativeMode
                             }
                             catch (Exception ex)
                             {
-                                Log.ConsoleError("Failed to read ({0}/12) Packet details of {1}: {2}", Length, ex.ToString(), ex.StackTrace);
+                                //Log.ConsoleError("Failed to read ({0}/12) Packet details of {1}: {2}", Length, ex.ToString(), ex.StackTrace);
+                                Log.ConsoleError("Failed to read ({0}/16) Packet details of {1}: {2}", Length, ex.ToString(), ex.StackTrace);
                                 return;
                             }
                             reader.Close();
