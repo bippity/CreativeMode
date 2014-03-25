@@ -1,5 +1,4 @@
 CreativeMode
 ============
 
-Adds a simple "creative mode" using Inanzen's Endless plugin and buffs
-via Commaster's https://github.com/Commaster/Endless
+Adds a simple "creative mode" using buffs and Inanzen's Endless plugin via Commaster's https://github.com/Commaster/Endless
