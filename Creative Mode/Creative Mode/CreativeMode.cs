@@ -51,7 +51,7 @@ namespace CreativeMode
             ServerApi.Hooks.ServerLeave.Register(this, OnLeave);
             ServerApi.Hooks.GameUpdate.Register(this, OnUpdate);
 
-            Commands.ChatCommands.Add(new Command("creativemode", EndlessCommand, "creativemode", "buildmode"));
+            Commands.ChatCommands.Add(new Command("creativemode", EndlessCommand, "creativemode"));
         }
 
         protected override void Dispose(bool disposing)
