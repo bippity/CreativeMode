@@ -71,6 +71,8 @@ namespace CreativeMode
         private bool[] NightOwl = new bool[256];
         private bool[] Gills = new bool[256];
         private bool[] ObsidianSkin = new bool[256];
+        private bool[] Builder = new bool[256];
+        private bool[] Mining = new bool[256];
 
         private DateTime LastCheck = DateTime.UtcNow;
 
@@ -83,6 +85,8 @@ namespace CreativeMode
             NightOwl[args.Who] = false;
             Gills[args.Who] = false;
             ObsidianSkin[args.Who] = false;
+            Builder[args.Who] = false;
+            Mining[args.Who] = false;
         }
 
         public void OnUpdate(EventArgs args)
@@ -104,6 +108,10 @@ namespace CreativeMode
                         TShock.Players[i].SetBuff(4, 300, true);
                     if (ObsidianSkin[i])
                         TShock.Players[i].SetBuff(1, 300, true);
+                    if (Builder[i])
+                        TShock.Players[i].SetBuff(107, 300, true);
+                    if (Mining[i])
+                        TShock.Players[i].SetBuff(104, 300, true);
                 }
             }
         }
@@ -118,6 +126,8 @@ namespace CreativeMode
                 NightOwl[args.Player.Index] = !NightOwl[args.Player.Index];
                 Gills[args.Player.Index] = !Gills[args.Player.Index];
                 ObsidianSkin[args.Player.Index] = !ObsidianSkin[args.Player.Index];
+                Builder[args.Player.Index] = !Builder[args.Player.Index];
+                Mining[args.Player.Index] = !Mining[args.Player.Index];
 
 
                 if (args.Parameters.Count == 1)
