@@ -170,10 +170,11 @@ namespace CreativeMode
                 {
                     #region Modify Tile (0x11) [17]
                     Int32 Length = e.Msg.readBuffer.Length;
+
                     Byte type; //Action
-                    Int32 x, y;  //Tile X & Y
+                    Int16 x, y;  //Tile X & Y
                     UInt16 tileType;
-                    Byte style;
+                    Byte style; //Var2
                     using (var data = new MemoryStream(e.Msg.readBuffer, e.Index, e.Length))
                     {
                         using (var reader = new BinaryReader(data))
@@ -181,11 +182,10 @@ namespace CreativeMode
                             try
                             {
                                 type = reader.ReadByte(); 
-                                x = reader.ReadInt32();
-                                y = reader.ReadInt32();
+                                x = reader.ReadInt16();
+                                y = reader.ReadInt16();
                                 if (x >= 0 && y >= 0 && x < Main.maxTilesX && y < Main.maxTilesY)
                                 {
-                                    TSPlayer.Server.SendMessage("Modify Tile triggered");
                                     int count = 0;
                                     Item giveItem = null;
                                     switch (type)
@@ -294,7 +294,6 @@ namespace CreativeMode
                 }
                 if (e.MsgID == PacketTypes.PaintTile || e.MsgID == PacketTypes.PaintWall)
                 {
-                    TSPlayer.Server.SendMessage("Paint ID triggered");
                     #region Paint Tile (0x3F) [63] & Paint Wall (0x40) [64]
                     Int32 Length = e.Msg.readBuffer.Length;
                     Int16 x, y;
@@ -322,7 +321,6 @@ namespace CreativeMode
                     #endregion
                     if (x >= 0 && y >= 0 && x < Main.maxTilesX && y < Main.maxTilesY)
                     {
-                        TSPlayer.Server.SendMessage("Modify Paint triggered");
                         int count = 0;
                         Item giveItem = null;
                         foreach (Item item in TShock.Players[e.Msg.whoAmI].TPlayer.inventory)
