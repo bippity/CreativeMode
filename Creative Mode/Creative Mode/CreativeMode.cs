@@ -17,6 +17,7 @@ namespace CreativeMode
     public class CreativeMode : TerrariaPlugin
     {
         public static Boolean[] playerList = new Boolean[Main.maxNetPlayers];
+        public TSPlayer plr;
 
         public CreativeMode(Main game)
             : base(game)
@@ -51,7 +52,7 @@ namespace CreativeMode
             ServerApi.Hooks.ServerLeave.Register(this, OnLeave);
             ServerApi.Hooks.GameUpdate.Register(this, OnUpdate);
 
-            Commands.ChatCommands.Add(new Command("creativemode", EndlessCommand, "creativemode"));
+            Commands.ChatCommands.Add(new Command(new List<string>(){"creativemode.*","creativemode.paint","creativemode.tiles"}, EndlessCommand, "creativemode"));
         }
 
         protected override void Dispose(bool disposing)
@@ -120,6 +121,8 @@ namespace CreativeMode
         {
             if (args.Player != null)
             {
+                plr = args.Player;
+
                 Shine[args.Player.Index] = !Shine[args.Player.Index]; //Turns method on/off
                 Panic[args.Player.Index] = !Panic[args.Player.Index];
                 WaterWalk[args.Player.Index] = !WaterWalk[args.Player.Index];
@@ -166,135 +169,140 @@ namespace CreativeMode
         {
             if (playerList[e.Msg.whoAmI])
             {
-                if (e.MsgID == PacketTypes.Tile)
+                if (plr.Group.HasPermission("creativemode.*") || plr.Group.HasPermission("creativemode.tiles"))
                 {
-                    #region Modify Tile (0x11) [17]
-                    Int32 Length = e.Msg.readBuffer.Length;
-
-                    Byte type; //Action
-                    Int16 x, y;  //Tile X & Y
-                    UInt16 tileType;
-                    Byte style; //Var2
-                    using (var data = new MemoryStream(e.Msg.readBuffer, e.Index, e.Length))
+                    if (e.MsgID == PacketTypes.Tile)
                     {
-                        using (var reader = new BinaryReader(data))
+                        #region Modify Tile (0x11) [17]
+                        Int32 Length = e.Msg.readBuffer.Length;
+
+                        Byte type; //Action
+                        Int16 x, y;  //Tile X & Y
+                        UInt16 tileType;
+                        Byte style; //Var2
+                        using (var data = new MemoryStream(e.Msg.readBuffer, e.Index, e.Length))
                         {
-                            try
+                            using (var reader = new BinaryReader(data))
                             {
-                                type = reader.ReadByte(); 
-                                x = reader.ReadInt16();
-                                y = reader.ReadInt16();
-                                if (x >= 0 && y >= 0 && x < Main.maxTilesX && y < Main.maxTilesY)
+                                try
                                 {
-                                    int count = 0;
-                                    Item giveItem = null;
-                                    switch (type)
+                                    type = reader.ReadByte();
+                                    x = reader.ReadInt16();
+                                    y = reader.ReadInt16();
+                                    if (x >= 0 && y >= 0 && x < Main.maxTilesX && y < Main.maxTilesY)
                                     {
-                                        case 1:
-                                            #region PlaceTile
-                                            {
-                                                bool wand = false;
-                                                int itemWand = -1;
-                                                tileType = reader.ReadUInt16();//creatTile //Special cases for 191, 192 (Wood), 194 (Bone if item.type is not 766), 225 (Hive) //Check .tileWand
-                                                style = reader.ReadByte();//placeStyle
-                                                foreach (Item item in TShock.Players[e.Msg.whoAmI].TPlayer.inventory)
+                                        int count = 0;
+                                        Item giveItem = null;
+                                        switch (type)
+                                        {
+                                            case 1:
+                                                #region PlaceTile
                                                 {
-                                                    if (item.type != 0 && item.createTile == tileType && item.placeStyle == style)
-                                                    {
-                                                        if (item.tileWand != -1)
-                                                        {
-                                                            wand = true;
-                                                            itemWand = item.tileWand;
-                                                            break;
-                                                        }
-                                                        count += item.stack;
-                                                        giveItem = item;
-                                                    }
-                                                }
-                                                if (wand)
-                                                {
-                                                    count = 0;
+                                                    bool wand = false;
+                                                    int itemWand = -1;
+                                                    tileType = reader.ReadUInt16();//creatTile //Special cases for 191, 192 (Wood), 194 (Bone if item.type is not 766), 225 (Hive) //Check .tileWand
+                                                    style = reader.ReadByte();//placeStyle
                                                     foreach (Item item in TShock.Players[e.Msg.whoAmI].TPlayer.inventory)
                                                     {
-                                                        if (item.type == itemWand)
+                                                        if (item.type != 0 && item.createTile == tileType && item.placeStyle == style)
+                                                        {
+                                                            if (item.tileWand != -1)
+                                                            {
+                                                                wand = true;
+                                                                itemWand = item.tileWand;
+                                                                break;
+                                                            }
+                                                            count += item.stack;
+                                                            giveItem = item;
+                                                        }
+                                                    }
+                                                    if (wand)
+                                                    {
+                                                        count = 0;
+                                                        foreach (Item item in TShock.Players[e.Msg.whoAmI].TPlayer.inventory)
+                                                        {
+                                                            if (item.type == itemWand)
+                                                            {
+                                                                count += item.stack;
+                                                                giveItem = item;
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                                #endregion
+                                                break;
+                                            case 3:
+                                                #region PlaceWall
+                                                {
+                                                    tileType = reader.ReadUInt16();//createWall
+                                                    foreach (Item item in TShock.Players[e.Msg.whoAmI].TPlayer.inventory)
+                                                    {
+                                                        if (item.type != 0 && item.createWall == tileType)
                                                         {
                                                             count += item.stack;
                                                             giveItem = item;
                                                         }
                                                     }
                                                 }
-                                            }
-                                            #endregion
-                                            break;
-                                        case 3:
-                                            #region PlaceWall
-                                            {
-                                                tileType = reader.ReadUInt16();//createWall
-                                                foreach (Item item in TShock.Players[e.Msg.whoAmI].TPlayer.inventory)
+                                                #endregion
+                                                break;
+                                            case 8:
+                                                #region PlaceActuator
                                                 {
-                                                    if (item.type != 0 && item.createWall == tileType)
+                                                    foreach (Item item in TShock.Players[e.Msg.whoAmI].TPlayer.inventory)
                                                     {
-                                                        count += item.stack;
-                                                        giveItem = item;
+                                                        if (item.type == 849)
+                                                        {
+                                                            count += item.stack;
+                                                            giveItem = item;
+                                                        }
                                                     }
                                                 }
-                                            }
-                                            #endregion
-                                            break;
-                                        case 8:
-                                            #region PlaceActuator
-                                            {
-                                                foreach (Item item in TShock.Players[e.Msg.whoAmI].TPlayer.inventory)
+                                                #endregion
+                                                break;
+                                            case 5:
+                                            case 10:
+                                            case 12:
+                                                #region PlaceWire*
                                                 {
-                                                    if (item.type == 849)
+                                                    foreach (Item item in TShock.Players[e.Msg.whoAmI].TPlayer.inventory)
                                                     {
-                                                        count += item.stack;
-                                                        giveItem = item;
+                                                        if (item.type == 530)
+                                                        {
+                                                            count += item.stack;
+                                                            giveItem = item;
+                                                        }
                                                     }
                                                 }
-                                            }
-                                            #endregion
-                                            break;
-                                        case 5:
-                                        case 10:
-                                        case 12:
-                                            #region PlaceWire*
-                                            {
-                                                foreach (Item item in TShock.Players[e.Msg.whoAmI].TPlayer.inventory)
-                                                {
-                                                    if (item.type == 530)
-                                                    {
-                                                        count += item.stack;
-                                                        giveItem = item;
-                                                    }
-                                                }
-                                            }
-                                            #endregion
-                                            break;
-                                    }
-                                    if (count < 10 && giveItem != null)
-                                    {
-                                        TShock.Players[e.Msg.whoAmI].GiveItem(giveItem.type, giveItem.name, giveItem.width, giveItem.height, giveItem.maxStack - 10);
-                                        return;
+                                                #endregion
+                                                break;
+                                        }
+                                        if (count < 10 && giveItem != null)
+                                        {
+                                            TShock.Players[e.Msg.whoAmI].GiveItem(giveItem.type, giveItem.name, giveItem.width, giveItem.height, giveItem.maxStack - 10);
+                                            return;
+                                        }
                                     }
                                 }
+                                catch (Exception ex)
+                                {
+                                    //Log.ConsoleError("Failed to read ({0}/12) Packet details of {1}: {2}", Length, ex.ToString(), ex.StackTrace);
+                                    Log.ConsoleError("Failed to read ({0}/16) Packet details of {1}: {2}", Length, ex.ToString(), ex.StackTrace);
+                                    return;
+                                }
+                                reader.Close();
+                                reader.Dispose();
                             }
-                            catch (Exception ex)
-                            {
-                                //Log.ConsoleError("Failed to read ({0}/12) Packet details of {1}: {2}", Length, ex.ToString(), ex.StackTrace);
-                                Log.ConsoleError("Failed to read ({0}/16) Packet details of {1}: {2}", Length, ex.ToString(), ex.StackTrace);
-                                return;
-                            }
-                            reader.Close();
-                            reader.Dispose();
                         }
+                        #endregion
+                        return;
                     }
-                    #endregion
-                    return;
                 }
-                if (e.MsgID == PacketTypes.PaintTile || e.MsgID == PacketTypes.PaintWall)
-                {
-                    #region Paint Tile (0x3F) [63] & Paint Wall (0x40) [64]
+
+                if (plr.Group.HasPermission("creativemode.*") || plr.Group.HasPermission("creativemode.paint"))
+                    if (e.MsgID == PacketTypes.PaintTile || e.MsgID == PacketTypes.PaintWall)
+                    {
+                        #region Paint Tile (0x3F) [63] & Paint Wall (0x40) [64]
                     Int32 Length = e.Msg.readBuffer.Length;
                     Int16 x, y;
                     Byte color; //type
@@ -338,8 +346,8 @@ namespace CreativeMode
                         }
                     }
                     #endregion
-                    return;
-                }
+                        return;
+                    }
             }
         }
     }
