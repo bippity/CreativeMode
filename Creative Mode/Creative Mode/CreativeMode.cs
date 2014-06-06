@@ -46,6 +46,7 @@ namespace CreativeMode
         }
 
 
+
         public override void Initialize()
         {
             ServerApi.Hooks.NetGetData.Register(this, GetData);
@@ -53,6 +54,16 @@ namespace CreativeMode
             ServerApi.Hooks.GameUpdate.Register(this, OnUpdate);
 
             Commands.ChatCommands.Add(new Command(new List<string>(){"creativemode.*","creativemode.paint","creativemode.tiles"}, EndlessCommand, "creativemode"));
+
+            if (!Config.ReadConfig())
+            {
+                Log.ConsoleError("Failed to read CreativeModeConfig.json. Consider generating a new config file.");
+            }
+
+            if (Config.contents.EnableBlacklist)
+            {
+                BlackList = Config.contents.BlacklistItems;
+            }
         }
 
         protected override void Dispose(bool disposing)
@@ -76,6 +87,8 @@ namespace CreativeMode
         private bool[] Mining = new bool[256];
 
         private DateTime LastCheck = DateTime.UtcNow;
+
+        public List<int> BlackList = new List<int>();
 
         public void OnLeave(LeaveEventArgs args)
         {
@@ -279,8 +292,15 @@ namespace CreativeMode
                                         }
                                         if (count < 10 && giveItem != null)
                                         {
-                                            TShock.Players[e.Msg.whoAmI].GiveItem(giveItem.type, giveItem.name, giveItem.width, giveItem.height, giveItem.maxStack - 10);
-                                            return;
+                                            if (Config.contents.EnableBlacklist && BlackList.Contains(giveItem.netID))
+                                            {
+                                                return;
+                                            }
+                                            else
+                                            {
+                                                TShock.Players[e.Msg.whoAmI].GiveItem(giveItem.type, giveItem.name, giveItem.width, giveItem.height, giveItem.maxStack - 10);
+                                                return;
+                                            }
                                         }
                                     }
                                 }
@@ -341,8 +361,15 @@ namespace CreativeMode
                         }
                         if (count < 10 && giveItem != null)
                         {
-                            TShock.Players[e.Msg.whoAmI].GiveItem(giveItem.type, giveItem.name, giveItem.width, giveItem.height, giveItem.maxStack - 10);
-                            return;
+                            if (Config.contents.EnableBlacklist && BlackList.Contains(giveItem.netID))
+                            {
+                                return;
+                            }
+                            else
+                            {
+                                TShock.Players[e.Msg.whoAmI].GiveItem(giveItem.type, giveItem.name, giveItem.width, giveItem.height, giveItem.maxStack - 10);
+                                return;
+                            }
                         }
                     }
                     #endregion
