@@ -15,6 +15,37 @@ namespace CreativeMode
 
         public class Contents
         {
+            public bool EnableWhitelist = false;
+            public List<int> WhitelistItems = new List<int>()
+            #region WhiteListItems
+                {
+                    2, //Dirt block
+                    30, //Dirt wall
+                    3, //Stone block
+                    26, //Stone wall
+                    61, //Ebonstone block
+                    214, //Hellstone brick
+                    460, //Pearlsand block
+                    409, //Pearlstone block
+                    412, //Pearlstone brick
+                    417, //Pearlstone brick wall
+                    414, //Mudstone block
+                    419, //Mudstone brick wall
+                    577, //Demonite brick
+                    606, //Demonite brick wall
+                    607, //Sandstone brick
+                    608, //Sandstone brick wall
+                    609, //Ebonstone brick
+                    610, //Ebonstone brick wall
+                    836, //Crimstone block
+                    321, //Tombstone
+                    1175, //Headstone
+                    1176, //Gravestone
+                    1593, //Titanstone block
+                    1594 //Titanstone block wall
+                };
+            #endregion
+
             public bool EnableBlacklist = false;
             public List<int> BlacklistItems = new List<int>()
 #region BlacklistItems           
@@ -24,6 +55,7 @@ namespace CreativeMode
                     13, //Gold ore
                     14, //Silver ore
                     56, //Demonite ore
+                    174, //Hellstone
                     364, //Cobalt ore
                     365, //Mythril ore
                     366, //Adamantite ore

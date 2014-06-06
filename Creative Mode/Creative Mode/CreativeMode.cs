@@ -60,9 +60,17 @@ namespace CreativeMode
                 Log.ConsoleError("Failed to read CreativeModeConfig.json. Consider generating a new config file.");
             }
 
+            if (Config.contents.EnableWhitelist)
+            {
+                WhiteList = Config.contents.WhitelistItems;
+            }
             if (Config.contents.EnableBlacklist)
             {
                 BlackList = Config.contents.BlacklistItems;
+            }
+            if (Config.contents.EnableWhitelist && Config.contents.EnableBlacklist)
+            {
+                Log.ConsoleError("CreativeMode Whitelist & Blacklist are both enabled! Defaulted to Whitelist.");
             }
         }
 
@@ -88,6 +96,7 @@ namespace CreativeMode
 
         private DateTime LastCheck = DateTime.UtcNow;
 
+        public List<int> WhiteList = new List<int>();
         public List<int> BlackList = new List<int>();
 
         public void OnLeave(LeaveEventArgs args)
@@ -292,7 +301,11 @@ namespace CreativeMode
                                         }
                                         if (count < 10 && giveItem != null)
                                         {
-                                            if (Config.contents.EnableBlacklist && BlackList.Contains(giveItem.netID))
+                                            if (Config.contents.EnableWhitelist && !WhiteList.Contains(giveItem.netID))
+                                            {
+                                                return;
+                                            }
+                                            else if (Config.contents.EnableBlacklist && BlackList.Contains(giveItem.netID))
                                             {
                                                 return;
                                             }
@@ -361,7 +374,11 @@ namespace CreativeMode
                         }
                         if (count < 10 && giveItem != null)
                         {
-                            if (Config.contents.EnableBlacklist && BlackList.Contains(giveItem.netID))
+                            if (Config.contents.EnableWhitelist && !WhiteList.Contains(giveItem.netID))
+                            {
+                                return;
+                            }
+                            else if (Config.contents.EnableBlacklist && BlackList.Contains(giveItem.netID))
                             {
                                 return;
                             }
