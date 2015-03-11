@@ -91,7 +91,7 @@ namespace CreativeMode
             }
             catch (Exception e)
             {
-                Log.ConsoleError(e.Message);
+                TShock.Log.ConsoleError(e.Message);
                 contents = new Contents();
             }
         }
@@ -118,13 +118,13 @@ namespace CreativeMode
                 else
                 {
                     CreateConfig();
-                    Log.ConsoleInfo("Created CreativeModeConfig.json.");
+                    TShock.Log.ConsoleInfo("Created CreativeModeConfig.json.");
                     return true;
                 }
             }
             catch (Exception e)
             {
-                Log.ConsoleError(e.Message);
+                TShock.Log.ConsoleError(e.Message);
             }
             return false;
         }
@@ -147,7 +147,7 @@ namespace CreativeMode
             }
             catch (Exception e)
             {
-                Log.ConsoleError(e.Message);
+                TShock.Log.ConsoleError(e.Message);
                 return false;
             }
         }

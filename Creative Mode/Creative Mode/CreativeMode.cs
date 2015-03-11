@@ -13,7 +13,7 @@ using TShockAPI.DB;
 
 namespace CreativeMode
 {
-    [ApiVersion(1, 16)]
+    [ApiVersion(1, 17)]
     public class CreativeMode : TerrariaPlugin
     {
         public static Boolean[] playerList = new Boolean[Main.maxNetPlayers];
@@ -57,7 +57,7 @@ namespace CreativeMode
 
             if (!Config.ReadConfig())
             {
-                Log.ConsoleError("Failed to read CreativeModeConfig.json. Consider generating a new config file.");
+                TShock.Log.ConsoleError("Failed to read CreativeModeConfig.json. Consider generating a new config file.");
             }
 
             if (Config.contents.EnableWhitelist)
@@ -70,7 +70,7 @@ namespace CreativeMode
             }
             if (Config.contents.EnableWhitelist && Config.contents.EnableBlacklist)
             {
-                Log.ConsoleError("CreativeMode Whitelist & Blacklist are both enabled! Defaulted to Whitelist.");
+                TShock.Log.ConsoleError("CreativeMode Whitelist & Blacklist are both enabled! Defaulted to Whitelist.");
             }
         }
 
@@ -319,8 +319,7 @@ namespace CreativeMode
                                 }
                                 catch (Exception ex)
                                 {
-                                    //Log.ConsoleError("Failed to read ({0}/12) Packet details of {1}: {2}", Length, ex.ToString(), ex.StackTrace);
-                                    Log.ConsoleError("Failed to read ({0}/16) Packet details of {1}: {2}", Length, ex.ToString(), ex.StackTrace);
+                                    TShock.Log.ConsoleError("Failed to read ({0}/16) Packet details of {1}: {2}", Length, ex.ToString(), ex.StackTrace);
                                     return;
                                 }
                                 reader.Close();
@@ -352,7 +351,7 @@ namespace CreativeMode
                             }
                             catch (Exception ex)
                             {
-                                Log.ConsoleError("Failed to read Packet details of {0}: {1}", ex.ToString(), ex.StackTrace);
+                                TShock.Log.ConsoleError("Failed to read Packet details of {0}: {1}", ex.ToString(), ex.StackTrace);
                                 return;
                             }
                             reader.Close();
