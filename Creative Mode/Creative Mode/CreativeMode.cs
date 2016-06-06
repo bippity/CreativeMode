@@ -13,7 +13,7 @@ using TShockAPI.DB;
 
 namespace CreativeMode
 {
-	[ApiVersion(1, 22)]
+	[ApiVersion(1, 23)]
 	public class CreativeMode : TerrariaPlugin
 	{
 		public static Boolean[] playerList = new Boolean[Main.maxNetPlayers];
@@ -395,21 +395,10 @@ namespace CreativeMode
 				}
 
 				//Reference to DarkUnderdog's InfiniteAmmo code - pastebin.com/7wFyUD5X
-				if (plr.Group.HasPermission("creativemode.*") || plr.Group.HasPermission("creativemode.ammo"))
+				/*if (plr.Group.HasPermission("creativemode.*") || plr.Group.HasPermission("creativemode.ammo"))
 				{
 					if (e.MsgID == PacketTypes.ProjectileNew)
 					{
-						/*using (var data = new MemoryStream(e.Msg.readBuffer, e.Index, e.Length))
-						{
-							using (var reader = new BinaryReader(data))
-							{
-								try
-								{
-									//stuff
-								}
-							}
-						}*/
-
 						foreach (Item item in TShock.Players[e.Msg.whoAmI].TPlayer.inventory)
 						{
 							switch (item.ammo)
@@ -434,7 +423,7 @@ namespace CreativeMode
 						}
 					}
 					return;
-				}
+				}*/
 			}
 		}
 	}
