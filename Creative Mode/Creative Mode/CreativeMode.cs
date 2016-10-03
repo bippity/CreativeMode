@@ -1,19 +1,14 @@
 ﻿using System;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
 using System.Collections.Generic;
 using System.Reflection;
 using System.IO;
-using System.Threading;
 using Terraria;
 using TerrariaApi.Server;
 using TShockAPI;
-using TShockAPI.DB;
 
 namespace CreativeMode
 {
-	[ApiVersion(1, 23)]
+	[ApiVersion(1, 24)]
 	public class CreativeMode : TerrariaPlugin
 	{
 		public static Boolean[] playerList = new Boolean[Main.maxNetPlayers];
