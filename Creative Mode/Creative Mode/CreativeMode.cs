@@ -9,7 +9,7 @@ using TShockAPI;
 
 namespace CreativeMode
 {
-	[ApiVersion(1, 26)]
+	[ApiVersion(2, 0)]
 	public class CreativeMode : TerrariaPlugin
 	{
 		public static Boolean[] playerList = new Boolean[Main.maxNetPlayers];
