@@ -97,15 +97,23 @@ namespace CreativeMode
 
 		public void OnLeave(LeaveEventArgs args)
 		{
-			playerList[args.Who] = false;
-			Shine[args.Who] = false;
-			Panic[args.Who] = false;
-			WaterWalk[args.Who] = false;
-			NightOwl[args.Who] = false;
-			Gills[args.Who] = false;
-			ObsidianSkin[args.Who] = false;
-			Builder[args.Who] = false;
-			Mining[args.Who] = false;
+			try
+			{
+				playerList[args.Who] = false;
+				Shine[args.Who] = false;
+				Panic[args.Who] = false;
+				WaterWalk[args.Who] = false;
+				NightOwl[args.Who] = false;
+				Gills[args.Who] = false;
+				ObsidianSkin[args.Who] = false;
+				Builder[args.Who] = false;
+				Mining[args.Who] = false;
+			}
+			catch (Exception e)
+			{
+				TShock.Log.Error(e.ToString());
+				TShock.Log.Error(args.Who.ToString());
+			}
 		}
 
 		public void OnUpdate(EventArgs args)
