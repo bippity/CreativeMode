@@ -9,7 +9,7 @@ using TShockAPI;
 
 namespace CreativeMode
 {
-	[ApiVersion(2, 0)]
+	[ApiVersion(2, 1)]
 	public class CreativeMode : TerrariaPlugin
 	{
 		public static Boolean[] playerList = new Boolean[Main.maxNetPlayers];
@@ -315,7 +315,7 @@ namespace CreativeMode
 											}
 											else
 											{
-												TShock.Players[e.Msg.whoAmI].GiveItem(giveItem.type, giveItem.name, giveItem.width, giveItem.height, giveItem.maxStack - 10);
+												TShock.Players[e.Msg.whoAmI].GiveItem(giveItem.type, giveItem.Name, giveItem.width, giveItem.height, giveItem.maxStack - 10);
 												return;
 											}
 										}
@@ -388,7 +388,7 @@ namespace CreativeMode
 								}
 								else
 								{
-									TShock.Players[e.Msg.whoAmI].GiveItem(giveItem.type, giveItem.name, giveItem.width, giveItem.height, giveItem.maxStack - 10);
+									TShock.Players[e.Msg.whoAmI].GiveItem(giveItem.type, giveItem.Name, giveItem.width, giveItem.height, giveItem.maxStack - 10);
 									return;
 								}
 							}
