@@ -1,2 +1,2 @@
 language: csharp
-solution: ./Creative Mode/Creative Mode/Creative Mode.csproj
+solution: "./Creative Mode/Creative Mode/Creative Mode.csproj"
