@@ -193,6 +193,9 @@ namespace CreativeMode
 
 		public void GetData(GetDataEventArgs e)
 		{
+			if (e.Msg.whoAmI > Main.maxNetPlayers)
+				return;
+				
 			if (playerList[e.Msg.whoAmI])
 			{
 				if (plr.Group.HasPermission("creativemode.*") || plr.Group.HasPermission("creativemode.tiles"))
