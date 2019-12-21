@@ -315,7 +315,8 @@ namespace CreativeMode
 											}
 											else
 											{
-												TShock.Players[e.Msg.whoAmI].GiveItem(giveItem.type, giveItem.Name, giveItem.width, giveItem.height, giveItem.maxStack - 10);
+												//TShock.Players[e.Msg.whoAmI].GiveItem(giveItem.type, giveItem.Name, giveItem.width, giveItem.height, giveItem.maxStack - 10);
+												TShock.Players[e.Msg.whoAmI].GiveItemCheck(giveItem.type, giveItem.Name, giveItem.maxStack - 10);
 												return;
 											}
 										}
@@ -388,7 +389,8 @@ namespace CreativeMode
 								}
 								else
 								{
-									TShock.Players[e.Msg.whoAmI].GiveItem(giveItem.type, giveItem.Name, giveItem.width, giveItem.height, giveItem.maxStack - 10);
+									//TShock.Players[e.Msg.whoAmI].GiveItem(giveItem.type, giveItem.Name, giveItem.width, giveItem.height, giveItem.maxStack - 10);
+									TShock.Players[e.Msg.whoAmI].GiveItemCheck(giveItem.type, giveItem.Name, giveItem.maxStack - 10);
 									return;
 								}
 							}
