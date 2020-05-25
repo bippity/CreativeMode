@@ -48,7 +48,7 @@ namespace CreativeMode
 
             public bool EnableBlacklist = false;
             public List<int> BlacklistItems = new List<int>()
-#region BlacklistItems           
+            #region BlacklistItems           
             {
                     11, //Iron ore
                     12, //Copper ore
@@ -69,7 +69,7 @@ namespace CreativeMode
                     1105, //Orichalcum ore
                     1106 //Titanium ore
              };
-#endregion
+            #endregion
         }
 
         public static void CreateConfig()
